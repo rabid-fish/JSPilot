@@ -11,23 +11,35 @@ function UnitTest() {
 		};
 	};
 	
-	this.registerTest = function(test) {
-		tests[tests.length] = test;
-	};
+	this.test = function(condition, message) {
+		if (condition) return;
+		addFailure(test.caller, message);
+	}
 	
-	this.runTests = function() {
-		for (var test in tests) {
-			test();
+	this.runTests = function(selector) {
+		var tests = [];
+		
+		for (var f in window) {
+			if (f && 
+				f.indexOf('Test') > 0 && 
+				f != 'UnitTest') {
+				
+				if (typeof window[f] === 'function') {
+					alert(f);
+					tests.push(f);
+				}
+			}
 		}
+		
+		$(selector).empty();
+		
+		for (var i = 0; i < tests.length; i++) {
+			$(selector).append('<li>running ' + tests[i] + '</li>')
+			eval(test[i] + '()');
+		}
+		
+		alert(this.failures.length)
 	};
 }
 
-UnitTest.assert = function(condition, message) {
-	if (condition) return;
-
-	// do something magical here
-}
-
-var assert = UnitTest.assert();
-
-assert();
+var test = UnitTest.test;

@@ -3,6 +3,7 @@
 <title>JSPilot Tests</title>
 <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="src/util/TestUtil.js"></script>
+<script type="text/javascript" src="test/util/TestUtilTest.js"></script>
 <style type="text/css">
 
 h1, h2 {
@@ -28,10 +29,12 @@ div.section {
 <div id="sectionDebug" class="section">
 	<h2>Debug</h2>
 	<p id="debug"></p>
+	<ul id="tests"></ul>
 </div>
 
 <div id="sectionControls" class="section">
 	<h2>Controls</h2>
+	<input type="submit" name="Submit" value="Submit" onClick="new UnitTest().runTests('#tests'); return false;">
 </div>
 
 </body>
