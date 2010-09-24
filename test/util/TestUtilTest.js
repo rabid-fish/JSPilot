@@ -1,5 +1,5 @@
 
 function HappyTest() {
-	alert("hi");
+	test(true, "don't record this");
 	test(false, "record this");
 }
