@@ -2,31 +2,33 @@
 function UnitTest(selectorMessages, selectorProgress) {
 	
 	this.tests = null;
+	this.testNames = null;
+	this.testIndex = 0;
+	this.testsRun = 0;
+	
 	this.failures = null;
 	this.selectorMessages = selectorMessages;
 	this.selectorProgress = selectorProgress;
-	this.testCount = 0;
 	
 	this.run = function() {
-
-		this.tests = new Array();
-		this.failures = new Array();
-	
-		this.findTests();
+		this.findTests(window);
 		this.runTests();
 	};
 	
-	this.findTests = function() {
+	this.findTests = function(source) {
 	
 		this.tests = [];
+		this.testNames = [];
 		
-		for (var f in window) {
+		for (var f in source) {
 			if (f && 
-				f.indexOf('Test') == (f.length - 'Test'.length) && 
+				f.indexOf('_') != -0 &&
+				f.lastIndexOf('Test') == (f.length - 'Test'.length) && 
 				f != 'UnitTest') {
 				
-				if (typeof window[f] === 'function') {
-					this.tests.push(f);
+				if (typeof source[f] === 'function') {
+					this.testNames.push(f);
+					this.tests.push(source[f]);
 				}
 			}
 		}
@@ -34,21 +36,29 @@ function UnitTest(selectorMessages, selectorProgress) {
 	
 	this.runTests = function() {
 		
+		this.testIndex = 0;
+		this.testsRun = 0;
+		this.failures = [];
+		
 		if (this.selectorMessages) {
 			$(this.selectorMessages).empty();
 		}
 		
 		for (var i = 0; i < this.tests.length; i++) {
 			if (this.selectorMessages) {
-				$(this.selectorMessages).append('<li>running ' + this.tests[i] + '</li>')
+				$(this.selectorMessages).append('<li>running ' + this.testNames[i] + '</li>')
 			}
-			eval(this.tests[i] + '()');
+			this.testIndex = i;
+//			eval(this.tests[this.testIndex] + '()');
+			this.tests[this.testIndex]();
 			
 			this.updateProgress();
 		}
 	};
 	
 	this.updateProgress = function() {
+		
+		if (!this.selectorProgress) return;
 		
 		$(this.selectorProgress).removeClass('testSuccess').removeClass('testFailure');
 		
@@ -59,9 +69,11 @@ function UnitTest(selectorMessages, selectorProgress) {
 		}
 	}
 	
-	this.test = function(source, condition, message) {
-		this.testCount++;
+	this.test = function(condition, message) {
+		this.testsRun++;
 		if (condition) return;
+		
+		var source = this.testNames[this.testIndex];
 		this.addFailure(source, message);
 	};
 	
@@ -75,12 +87,12 @@ function UnitTest(selectorMessages, selectorProgress) {
 
 var _unitTest;
 
-//Create some globally scoped functions
+// Create a singleton
 var runTests = function(selectorMessages, selectorProgress) {
 	_unitTest = new UnitTest(selectorMessages, selectorProgress);
 	_unitTest.run();
 };
 
 var test = function(condition, message) {
-	_unitTest.test(test.caller, condition, message);
+	_unitTest.test(condition, message);
 };
