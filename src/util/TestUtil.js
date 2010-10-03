@@ -1,14 +1,22 @@
+/*
+ * Simple testing facility. 
+ * To use it, create a function that ends in the name 'Test'
+ * (for example: FooTest), then call to the global function 
+ * test() with a condition (for example: test(1 == 1)).
+ * Your function (FooTest) will automatically get picked up
+ * and run by the this facility.
+ */
 
-function UnitTest(selectorMessages, selectorProgress) {
+function Tester(selectorMessages, selectorProgress) {
 	
-	this.tests = null;
-	this.testNames = null;
-	this.testIndex = 0;
-	this.testsRun = 0;
+	var tests = null;
+	var testNames = null;
+	var testIndex = 0;
+	var testsRun = 0;
 	
-	this.failures = null;
-	this.selectorMessages = selectorMessages;
-	this.selectorProgress = selectorProgress;
+	var failures = null;
+	var selectorMessages = selectorMessages;
+	var selectorProgress = selectorProgress;
 	
 	this.run = function() {
 		this.findTests(window);
@@ -17,18 +25,17 @@ function UnitTest(selectorMessages, selectorProgress) {
 	
 	this.findTests = function(source) {
 	
-		this.tests = [];
-		this.testNames = [];
+		tests = [];
+		testNames = [];
 		
 		for (var f in source) {
 			if (f && 
 				f.indexOf('_') != -0 &&
-				f.lastIndexOf('Test') == (f.length - 'Test'.length) && 
-				f != 'UnitTest') {
+				f.lastIndexOf('Test') == (f.length - 'Test'.length)) {
 				
 				if (typeof source[f] === 'function') {
-					this.testNames.push(f);
-					this.tests.push(source[f]);
+					testNames.push(f);
+					tests.push(source[f]);
 				}
 			}
 		}
@@ -36,21 +43,21 @@ function UnitTest(selectorMessages, selectorProgress) {
 	
 	this.runTests = function() {
 		
-		this.testIndex = 0;
-		this.testsRun = 0;
-		this.failures = [];
+		testIndex = 0;
+		testsRun = 0;
+		failures = [];
 		
-		if (this.selectorMessages) {
-			$(this.selectorMessages).empty();
+		if (selectorMessages) {
+			$(selectorMessages).empty();
 		}
 		
-		for (var i = 0; i < this.tests.length; i++) {
-			if (this.selectorMessages) {
-				$(this.selectorMessages).append('<li>running ' + this.testNames[i] + '</li>')
+		for (var i = 0; i < tests.length; i++) {
+			if (selectorMessages) {
+				$(selectorMessages).append('<li>running ' + testNames[i] + '</li>')
 			}
-			this.testIndex = i;
-//			eval(this.tests[this.testIndex] + '()');
-			this.tests[this.testIndex]();
+			testIndex = i;
+//			eval(tests[testIndex] + '()');
+			tests[testIndex]();
 			
 			this.updateProgress();
 		}
@@ -58,41 +65,53 @@ function UnitTest(selectorMessages, selectorProgress) {
 	
 	this.updateProgress = function() {
 		
-		if (!this.selectorProgress) return;
+		if (!selectorProgress) return;
 		
-		$(this.selectorProgress).removeClass('testSuccess').removeClass('testFailure');
+		$(selectorProgress).removeClass('testSuccess').removeClass('testFailure');
 		
-		if (this.failures.length > 0) {
-			$(this.selectorProgress).addClass('testFailure');
+		if (failures.length > 0) {
+			$(selectorProgress).addClass('testFailure');
 		} else {
-			$(this.selectorProgress).addClass('testSuccess');
+			$(selectorProgress).addClass('testSuccess');
 		}
 	}
 	
+	this.countOfTests = function() {
+		return tests.length;
+	};
+	
+	this.countOfFailures = function() {
+		return failures.length;
+	};
+	
 	this.test = function(condition, message) {
-		this.testsRun++;
+		testsRun++;
 		if (condition) return;
 		
-		var source = this.testNames[this.testIndex];
+		var source = testNames[testIndex];
 		this.addFailure(source, message);
 	};
 	
 	this.addFailure = function(source, message) {
-		this.failures[this.failures.length] = {
+		failures[failures.length] = {
 			'source' : source,
 			'message' : message
 		};
+		
+		if (selectorMessages) {
+			$(selectorMessages).append('<li>failure testing "' + message + '"</li>')
+		}
 	};
 };
 
-var _unitTest;
-
 // Create a singleton
+var _tester;
+
 var runTests = function(selectorMessages, selectorProgress) {
-	_unitTest = new UnitTest(selectorMessages, selectorProgress);
-	_unitTest.run();
+	_tester = new Tester(selectorMessages, selectorProgress);
+	_tester.run();
 };
 
 var test = function(condition, message) {
-	_unitTest.test(condition, message);
+	_tester.test(condition, message);
 };

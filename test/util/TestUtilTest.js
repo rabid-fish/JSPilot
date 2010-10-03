@@ -1,35 +1,35 @@
-// Normally I'd stick this guy *inside* UnitTestTest,
+// Normally I'd stick this guy *inside* TesterTest,
 // but we get some extra funky recursion going on if
 // we do, so keep it external, here.
-function UnitTestMock(unitTest) {
+function TesterMock(tester) {
 	
-	var parentUnitTest = unitTest;
+	var parentTester = tester;
 	
 	this.Mock1Test = function() {
 		this.localProperty = "local test property";
 		this.localFunction = function() { alert("local test function"); };
-		parentUnitTest.test(false, "record this a");
-		parentUnitTest.test(false, "record this b");
-		parentUnitTest.test(false, "record this c");
+		parentTester.test(false, "record this a");
+		parentTester.test(false, "record this b");
+		parentTester.test(false, "record this c");
 	}
 	
 	this.Mock2Test = function() {
 		this.localProperty = "local test property";
 		this.localFunction = function() { alert("local test function"); };
-		parentUnitTest.test(true, "don't record this a");
-		parentUnitTest.test(true, "don't record this b");
-		parentUnitTest.test(true, "don't record this c");
+		parentTester.test(true, "don't record this a");
+		parentTester.test(true, "don't record this b");
+		parentTester.test(true, "don't record this c");
 	}
 }
 
-function UnitTestTest() {
+function TesterTest() {
 	
-	var unitTest = new UnitTest();
-	var mock = new UnitTestMock(unitTest);
+	var tester = new Tester();
+	var mock = new TesterMock(tester);
 	
-	unitTest.findTests(mock);
-	test(unitTest.tests.length == 2);
+	tester.findTests(mock);
+	test(tester.countOfTests() == 2);
 	
-	unitTest.runTests();
-	test(unitTest.failures.length == 3);
+	tester.runTests();
+	test(tester.countOfFailures() == 3);
 }

@@ -3,7 +3,9 @@
 <title>JSPilot Tests</title>
 <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="src/util/TestUtil.js"></script>
+<script type="text/javascript" src="src/util/LogUtil.js"></script>
 <script type="text/javascript" src="test/util/TestUtilTest.js"></script>
+<script type="text/javascript" src="test/util/LogUtilTest.js"></script>
 <style type="text/css">
 
 h1, h2 {
@@ -26,7 +28,7 @@ div.testFailure { background-color: red; }
 </style>
 </head>
 
-<body>
+<body onLoad="runTests('#testMessages', '#testProgress');">
 
 <h1>JSPilot Tests</h1>
 
