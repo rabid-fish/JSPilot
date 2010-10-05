@@ -2,8 +2,11 @@
 <head>
 <title>JSPilot Tests</title>
 <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="src/util/CommonUtil.js"></script>
 <script type="text/javascript" src="src/util/TestUtil.js"></script>
 <script type="text/javascript" src="src/util/LogUtil.js"></script>
+
+<script type="text/javascript" src="test/util/CommonUtilTest.js"></script>
 <script type="text/javascript" src="test/util/TestUtilTest.js"></script>
 <script type="text/javascript" src="test/util/LogUtilTest.js"></script>
 <style type="text/css">
@@ -22,8 +25,12 @@ div.section {
 }
 
 #testProgress   { width: 360px; height: 20px; }
+ul              { margin: 10px; padding: 0px; list-style: none; }
 div.testSuccess { background-color: green; }
 div.testFailure { background-color: red; }
+span.test       { display: block; margin-top: 5px; }
+span.subtest    { margin: 0px 8px; }
+span.fail       { color: red; font-weight: bold; }
 
 </style>
 </head>

@@ -12,42 +12,19 @@ var LogLevel = {
 	'warn'  : 3
 };
 
-function LogDefaultAppender(selectorMessages) {
+function DefaultLogAppender() {
 	
-	var logArray = new Array();
-	var logIndex = -1;
-	var LOG_MAX_COUNT = 50;
+	// We'll use composition to make HtmlMessageAppender a parent
+	// class until we understand javascript inheritance better.
+	var parent = new HtmlMessageAppender('#log', 50);
 	
-	var _selectorMessage = selectorMessages;
+	this.clear = function() {
+		parent.clear();
+	}
 	
-	this.log = function(source, level, message) {
-		
-		var source = log.caller;
-		
-		logIndex++;
-		if (logIndex > LOG_MAX_COUNT) {
-			logIndex = 0;
-		}
-		
-		logArray[logIndex] = {
-			'source' : source,
-			'level' : level,
-			'message' : message
-		};
-	};
-	
-	this.toString = function() {
-		var buffer = '';
-		
-		for (var i = 0; i < LOG_MAX_COUNT; i++) {
-			logIndex++;
-			if (logIndex > LOG_MAX_COUNT) {
-				logIndex = 0;
-			}
-			buffer += logArray[logIndex].level + ' | ' + logArray[logIndex].source + ' | ' + logArray[logIndex].message + '<br>\n';
-		}
-		
-		return buffer;
+	this.append = function(source, level, message) {
+		parent.append(level + ' | ' + source + ' | ' + message);
+		parent.draw();
 	};
 }
 
@@ -82,13 +59,13 @@ function Logger(level) {
 		}
 		
 		var source = log.caller;
-		getLogAppender().log(source, level, message);
+		getLogAppender().append(source, level, message);
 	};
 }
 
-// Create a singleton for the appender used across 
-// all instances of Logger
-var _logAppender = new LogDefaultAppender();
+// Create a singleton for the appender, this appender 
+// will be used across all instances of Logger.
+var _logAppender = new DefaultLogAppender();
 
 var getLogAppender = function() {
 	return _logAppender;
