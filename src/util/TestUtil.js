@@ -139,7 +139,7 @@ function Tester(appender) {
 };
 
 // An instance of Tester is run as a singleton
-var _tester;
+var _tester = null;
 
 var runTests = function() {
 	var appender = new DefaultTestAppender();

@@ -35,7 +35,7 @@ span.fail       { color: red; font-weight: bold; }
 </style>
 </head>
 
-<body onLoad="runTests('#testMessages', '#testProgress');">
+<body onLoad="runTests();">
 
 <h1>JSPilot Tests</h1>
 
@@ -48,7 +48,7 @@ span.fail       { color: red; font-weight: bold; }
 
 <div id="sectionControls" class="section">
 	<h2>Controls</h2>
-	<input type="submit" name="Submit" value="Submit" onClick="runTests('#testMessages', '#testProgress'); return false;">
+	<input type="submit" name="Submit" value="Submit" onClick="runTests(); return false;">
 </div>
 
 </body>

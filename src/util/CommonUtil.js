@@ -2,11 +2,11 @@
  * Facilities for reusable components that are small and don't deserve their own file.
  */
 
-function HtmlMessageAppender(messagesSelector, maxMessageDisplay) {
+function HtmlMessageAppender(selector, maxMessageDisplay) {
 	
 	var messages = new Array();
 	var messagesIndex = -1;
-	var messagesSelector = $(messagesSelector);
+	var messagesSelector = $(selector);
 	
 	var MESSAGE_MAX_DISPLAY = maxMessageDisplay ? maxMessageDisplay : 50;
 	

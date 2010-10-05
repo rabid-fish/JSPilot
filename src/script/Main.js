@@ -10,5 +10,4 @@ $(document).ready(function() {
 	var canvas = new Canvas();
 	canvas.addSprite('one', SpriteTypes.rectangle);
 	canvas.addSprite('two', SpriteTypes.circle);
-	canvas.debug();
 });

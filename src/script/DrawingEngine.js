@@ -9,7 +9,10 @@ var SpriteTypes = {
 
 function Canvas() {
 	
-	this.properties = {
+	var logger = new Logger(LogLevel.trace);
+	logger.log(LogLevel.trace, 'Instantiating Canvas');
+	
+	var properties = {
 		'sprites' : new Array()
 	};
 	
@@ -17,7 +20,7 @@ function Canvas() {
 	};
 	
 	this.addSprite = function(name, type) {
-		var sprites = this.properties.sprites;
+		var sprites = properties.sprites;
 		var sprite = new Sprite(name, type);
 //		alert(sprite.debug());
 		sprites[sprites.length] = sprite;
@@ -29,8 +32,8 @@ function Canvas() {
 	this.debug = function() {
 		var buffer = '';
 		
-		alert(this.properties.sprites.length);
-		for (var sprite in this.properties.sprites) {
+		alert(properties.sprites.length);
+		for (var sprite in properties.sprites) {
 			alert(sprite);
 			buffer += sprite.debug() + "<br>\n";
 		}
@@ -43,7 +46,10 @@ function Canvas() {
 
 function Sprite(name, type) {
 	
-	this.properties = {
+	var logger = new Logger(LogLevel.trace);
+	logger.log(LogLevel.trace, 'Instantiating Sprite "' + name + '"');
+	
+	var properties = {
 		'name' : name,
 		'type' : type
 	};
@@ -55,6 +61,6 @@ function Sprite(name, type) {
 	};
 	
 	this.debug = function() {
-		return this.properties.name + ' - ' + this.properties.type;
+		return properties.name + ' - ' + properties.type;
 	};
 }

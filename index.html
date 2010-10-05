@@ -2,9 +2,12 @@
 <head>
 <title>JSPilot</title>
 <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="script/Main.js"></script>
-<script type="text/javascript" src="script/DrawingEngine.js"></script>
-<script type="text/javascript" src="script/PhysicsEngine.js"></script>
+<script type="text/javascript" src="src/util/CommonUtil.js"></script>
+<script type="text/javascript" src="src/util/LogUtil.js"></script>
+
+<script type="text/javascript" src="src/script/Main.js"></script>
+<script type="text/javascript" src="src/script/DrawingEngine.js"></script>
+<script type="text/javascript" src="src/script/PhysicsEngine.js"></script>
 <style type="text/css">
 
 h1, h2 {
@@ -38,7 +41,7 @@ div.section {
 
 <div id="sectionDebug" class="section">
 	<h2>Debug</h2>
-	<p id="debug"></p>
+	<p id="log"></p>
 </div>
 
 <div id="sectionControls" class="section">

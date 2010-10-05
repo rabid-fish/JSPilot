@@ -6,10 +6,10 @@
  */
 
 var LogLevel = {
-	'trace' : 0,
-	'debug' : 1,
-	'info'  : 2,
-	'warn'  : 3
+	'trace' : 1,
+	'debug' : 2,
+	'info'  : 3,
+	'warn'  : 4
 };
 
 function DefaultLogAppender() {
@@ -28,46 +28,44 @@ function DefaultLogAppender() {
 	};
 }
 
-function Logger(level) {
+function Logger(level, appender) {
 	
-	var properties = {
-		'level'         : LogLevel.info,
-		'messageCount'  : 0
-	};
-
+	var loggerLevel = level ? level : LogLevel.info;
+	var loggerMessageCount = 0;
+	var loggerAppender = appender ? appender : getLogAppender();
+	
 	this.setLevel = function(level) {
-		properties.level = level;
+		loggerLevel = level;
 	};
 	
 	this.clearMessages = function() {
-		properties.messageCount = 0;
+		loggerAppender.clear();
+		loggerMessageCount = 0;
 	};
 	
 	this.getMessageCount = function() {
-		return properties.messageCount;
+		return loggerMessageCount;
 	};
 
 	this.log = function(level, message) {
 		
-		if (level < properties.level) {
+		if (level < loggerLevel) {
 			return;
 		}
 		
-		properties.messageCount++;
-		if (getLogAppender() == null) {
-			return;
-		}
-		
-		var source = log.caller;
-		getLogAppender().append(source, level, message);
+		loggerMessageCount++;
+		var source = arguments.callee.caller.name;
+		loggerAppender.append(source, level, message);
 	};
 }
 
-// Create a singleton for the appender, this appender 
-// will be used across all instances of Logger.
-var _logAppender = new DefaultLogAppender();
+// Create a singleton for the appender, this appender will be used across 
+// all instances of Logger.  Also, lazy instantiate the appender, as we
+// will not have access to the DOM until after document.ready.
+var _logAppender = null;
 
 var getLogAppender = function() {
+	if (_logAppender == null) _logAppender = new DefaultLogAppender();
 	return _logAppender;
 };
 
