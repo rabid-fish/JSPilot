@@ -6,8 +6,14 @@
  */
 
 $(document).ready(function() {
-
-	var canvas = new Canvas();
-	canvas.addSprite('one', SpriteTypes.rectangle);
-	canvas.addSprite('two', SpriteTypes.circle);
+	
+	// Configure logging
+	setLogConfig({ 'level' : LogLevel.trace });
+	
+	// Set up sprites
+	var canvas = new Canvas('canvas');
+	canvas.addSprite('one', SpriteTypes.triangle, [10, 10]);
+	canvas.addSprite('two', SpriteTypes.circle, [50, 15]);
+	canvas.addSprite('three', SpriteTypes.rectangle, [5, 65]);
+	canvas.draw();
 });

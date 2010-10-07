@@ -13,11 +13,11 @@ interface CanvasRenderingContext2D {
   void setTransform(in float m11, in float m12, in float m21, in float m22, in float dx, in float dy);
   void transform(in float m11, in float m12, in float m21, in float m22, in float dx, in float dy);
   void translate(in float x, in float y);
-        
+  
   // compositing 
   attribute float globalAlpha; // (default 1.0)
   attribute DOMString globalCompositeOperation; // (default source-over)
-        
+  
   // colors and styles 
   attribute any fillStyle; // (default black)
   attribute any strokeStyle; // (default black)

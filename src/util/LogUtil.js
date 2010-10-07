@@ -30,45 +30,63 @@ function DefaultLogAppender() {
 
 function Logger(level, appender) {
 	
-	var loggerLevel = level ? level : LogLevel.info;
-	var loggerMessageCount = 0;
-	var loggerAppender = appender ? appender : getLogAppender();
+	var properties = {
+		'level' : level ? level : LogLevel.info,
+		'messageCount' : 0,
+		'appender' : appender ? appender : new DefaultLogAppender()
+	};
 	
 	this.setLevel = function(level) {
-		loggerLevel = level;
+		properties.level = level;
 	};
 	
 	this.clearMessages = function() {
-		loggerAppender.clear();
-		loggerMessageCount = 0;
+		properties.appender.clear();
+		properties.messageCount = 0;
 	};
 	
 	this.getMessageCount = function() {
-		return loggerMessageCount;
+		return properties.messageCount;
 	};
 
-	this.log = function(level, message) {
+	this.log = function(level, message, source) {
 		
-		if (level < loggerLevel) {
+		if (level < properties.level) {
 			return;
 		}
 		
-		loggerMessageCount++;
-		var source = arguments.callee.caller.name;
-		loggerAppender.append(source, level, message);
+		properties.messageCount++;
+		var source = source ? source : arguments.callee.caller.name;
+		properties.appender.append(source, level, message);
 	};
 }
 
-// Create a singleton for the appender, this appender will be used across 
-// all instances of Logger.  Also, lazy instantiate the appender, as we
-// will not have access to the DOM until after document.ready.
-var _logAppender = null;
+// Lazy instantiate the default logger and friends, as we will 
+// not have access to the DOM until after document.ready.
+var _logger = null;
+var _logConfig = null;
 
-var getLogAppender = function() {
-	if (_logAppender == null) _logAppender = new DefaultLogAppender();
-	return _logAppender;
+var getLogger = function() {
+	
+	if (_logger == null && _logConfig != null) {
+		_logger = new Logger(_logConfig.level, _logConfig.appender);
+	}
+	else if (_logger == null) {
+		_logger = new Logger();
+	}
+	
+	return _logger;
 };
 
-var setLogAppender = function(logAppender) {
-	_logAppender = logAppender;
+var setLogConfig = function(args) {
+	_logConfig = {
+		'level' : args.level ? args.level : null,
+		'appender' : args.appender ? args.appender : null
+	};
 };
+
+// Create 'static' methods for easy access
+var trace = function(message){ var source = arguments.callee.caller.name; getLogger().log(LogLevel.trace, message, source); };
+var debug = function(message){ var source = arguments.callee.caller.name; getLogger().log(LogLevel.debug, message, source); };
+var info  = function(message){ var source = arguments.callee.caller.name; getLogger().log(LogLevel.info, message, source); };
+var warn  = function(message){ var source = arguments.callee.caller.name; getLogger().log(LogLevel.warn, message, source); };
